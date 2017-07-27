@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^games/$', views.GameListView.as_view(), name='games'),
     url(r'^games/(?P<pk>\d+)$', views.GameDetailView.as_view(), name='game-detail'),
     url(r'^games/(?P<pk>\d+)/update/$', views.GameUpdateView.as_view(), name='update-game'),
+    url(r'^games/(?P<pk>\d+)/delete/$', views.GameDeleteView.as_view(), name='delete-game'),
 ]
