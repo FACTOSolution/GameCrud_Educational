@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Title: {{ game.title }}</h1>
+
+  <p><strong>Publisher:</strong> {{ game.publisher }}</p>
+  <p><strong>Genre:</strong> {{ game.genre }}</p>
+  <p><strong>Plataform:</strong> {{ game.platform }}</p>
+  <p><strong>Owner:</strong> {{ game.owner }} </p>
+  <p><strong>Cover Img:</strong><img src= "media/{{game.cover_img}}"></p>
+
+{% endblock %}

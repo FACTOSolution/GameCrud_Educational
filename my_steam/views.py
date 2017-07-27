@@ -14,6 +14,9 @@ class GameListView(generic.ListView):
         context['extra_data'] = 'Example'
         return context
 
+class GameDetailView(generic.DetailView):
+    model = Game
+
 def index(request):
     num_games = Game.objects.all().count()
     return render(request, 'index.html', context={'num_games':num_games})

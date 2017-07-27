@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.urls import reverse
 
 class Game(models.Model):
     # Campos
@@ -23,4 +24,4 @@ class Game(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('game-detail', args=[str(self.id)])   
+        return reverse('game-detail', args=[str(self.id)])
