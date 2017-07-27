@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>My Steam</h1>
+
+  <p>Welcome to <em>My Steam</em>, a very basic Django website developed as a tutorial example</p>
+
+<h2>Dynamic conten</h2>
+
+  <p>My Steam has the following record counts:</p>
+  <ul>
+    <li><strong>Games: </strong> {{ num_games }}</li>
+  </ul>
+
+{% endblock %}
