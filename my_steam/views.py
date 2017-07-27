@@ -4,10 +4,12 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from .models import Game
 from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 class GameListView(generic.ListView):
     model = Game
     context_object_name = 'game_list'
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(GameListView,self).get_context_data(**kwargs)
@@ -16,6 +18,10 @@ class GameListView(generic.ListView):
 
 class GameDetailView(generic.DetailView):
     model = Game
+
+class GameUpdateView(UpdateView):
+    model = Game
+    fields = ['title','publisher','platform','cover_img','genre']
 
 def index(request):
     num_games = Game.objects.all().count()
