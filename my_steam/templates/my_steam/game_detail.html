@@ -9,4 +9,7 @@
   <p><strong>Owner:</strong> {{ game.owner }} </p>
   <p><strong>Cover Img:</strong><img src= "media/{{game.cover_img}}"></p>
 
+  <a href="{% url 'update-game' pk=game.id %}">Update</a>
+  <a href="{% url 'delete-game' pk=game.id %}">Delete</a>
+
 {% endblock %}
