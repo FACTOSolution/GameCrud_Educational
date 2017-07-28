@@ -6,6 +6,7 @@ from .models import Game
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from .forms import AddGameForm
 
 class GameListView(generic.ListView):
     model = Game
@@ -16,6 +17,10 @@ class GameListView(generic.ListView):
         context = super(GameListView,self).get_context_data(**kwargs)
         context['extra_data'] = 'Example'
         return context
+
+class GameCreateView(CreateView):
+    model = Game
+    form_class = AddGameForm
 
 class GameDetailView(generic.DetailView):
     model = Game
