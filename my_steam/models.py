@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class Game(models.Model):
     # Campos
@@ -10,6 +11,7 @@ class Game(models.Model):
     publisher = models.CharField(max_length=20, help_text="Max of 20 letters", null=True)
     platform = models.CharField(max_length=20, help_text="Max of 20 letters", null=True)
     cover_img = models.ImageField(upload_to='game_covers/', default=False)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     GENRES = (
         ('ACT', 'Action'),

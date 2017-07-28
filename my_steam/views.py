@@ -7,8 +7,9 @@ from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import AddGameForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class GameListView(generic.ListView):
+class GameListView(LoginRequiredMixin, generic.ListView):
     model = Game
     context_object_name = 'game_list'
     paginate_by = 10
@@ -18,18 +19,29 @@ class GameListView(generic.ListView):
         context['extra_data'] = 'Example'
         return context
 
-class GameCreateView(CreateView):
+class UserGamesList(LoginRequiredMixin, generic.ListView):
+    model = Game
+    context_object_name = 'game_list'
+
+    def get_queryset(self):
+        return Game.objects.filter(owner=self.request.user)
+
+class GameCreateView(LoginRequiredMixin,CreateView):
     model = Game
     form_class = AddGameForm
 
-class GameDetailView(generic.DetailView):
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super(GameCreateView, self).form_valid(form)
+
+class GameDetailView(LoginRequiredMixin,generic.DetailView):
     model = Game
 
-class GameUpdateView(UpdateView):
+class GameUpdateView(LoginRequiredMixin,UpdateView):
     model = Game
     fields = ['title','publisher','platform','cover_img','genre']
 
-class GameDeleteView(DeleteView):
+class GameDeleteView(LoginRequiredMixin, DeleteView):
     model = Game
     success_url = reverse_lazy('games')
 
