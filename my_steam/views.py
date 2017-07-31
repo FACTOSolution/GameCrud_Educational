@@ -9,8 +9,9 @@ from django.contrib.auth import authenticate, login
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .forms import AddGameForm, UserRegistrationForm
+from .forms import AddGameForm, UserRegistrationForm, ProfileForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 
 class GameListView(LoginRequiredMixin, generic.ListView):
     model = Game
@@ -58,17 +59,21 @@ def register(request):
         if form.is_valid():
             user_obj = form.cleaned_data
             username = user_obj['username']
-            emai = user_obj['emai']
+            email = user_obj['email']
             password = user_obj['password']
             if not (User.objects.filter(username=username).exists() or
                 User.objects.filter(email=email).exists()):
                 user = User.objects.create_user(username, email, password)
+                profile_form = ProfileForm(request.POST, instance = user.profile)
+                if profile_form.is_valid():
+                    profile_form.save()
                 user = authenticate(username=username, password=password)
                 login(request, user)
                 return HttpResponseRedirect('/')
-            else
+            else:
                 raise ValidationError('Username with tath email or password' +
                     ' already exists')
     else:
         form = UserRegistrationForm()
-    return render(request, 'user_form.html', {'form' : form})
+        profile_form = ProfileForm()
+    return render(request, 'user_form.html', {'form' : form, 'profile_form' :  profile_form})

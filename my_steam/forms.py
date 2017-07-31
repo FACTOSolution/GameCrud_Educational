@@ -1,5 +1,5 @@
 from django import forms
-from .models import Game
+from .models import Game, Profile
 from django.core.exceptions import ValidationError
 
 class AddGameForm(forms.ModelForm):
@@ -43,3 +43,8 @@ class UserRegistrationForm(forms.Form):
         max_length = 32,
         widget = forms.PasswordInput()
     )
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('steam_id', 'steam_username')
