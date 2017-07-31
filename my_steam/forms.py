@@ -20,8 +20,26 @@ class AddGameForm(forms.ModelForm):
         except:
             pass
 
-        return data    
+        return data
 
     class Meta:
         model = Game
         fields = ['title','publisher','platform','cover_img','genre']
+
+class UserRegistrationForm(forms.Form):
+    username = forms.CharField(
+        required=True,
+        label='Username',
+        max_length=32
+    )
+    email = forms.CharField(
+        required = True,
+        label = 'Email',
+        max_length = 42
+    )
+    password = forms.CharField(
+        required = True,
+        label = 'Password',
+        max_length = 32,
+        widget = forms.PasswordInput()
+    )

@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import Game
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .forms import AddGameForm
+from .forms import AddGameForm, UserRegistrationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 class GameListView(LoginRequiredMixin, generic.ListView):
@@ -48,3 +51,24 @@ class GameDeleteView(LoginRequiredMixin, DeleteView):
 def index(request):
     num_games = Game.objects.all().count()
     return render(request, 'index.html', context={'num_games':num_games})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user_obj = form.cleaned_data
+            username = user_obj['username']
+            emai = user_obj['emai']
+            password = user_obj['password']
+            if not (User.objects.filter(username=username).exists() or
+                User.objects.filter(email=email).exists()):
+                user = User.objects.create_user(username, email, password)
+                user = authenticate(username=username, password=password)
+                login(request, user)
+                return HttpResponseRedirect('/')
+            else
+                raise ValidationError('Username with tath email or password' +
+                    ' already exists')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'user_form.html', {'form' : form})
