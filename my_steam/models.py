@@ -19,7 +19,7 @@ class Profile(models.Model):
 
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()        
+        instance.profile.save()
 
 class Game(models.Model):
     # Campos
@@ -27,7 +27,7 @@ class Game(models.Model):
     publisher = models.CharField(max_length=20, help_text="Max of 20 letters", null=True)
     platform = models.CharField(max_length=20, help_text="Max of 20 letters", null=True)
     cover_img = models.ImageField(upload_to='game_covers/', default=False)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    owners = models.ManyToManyField(User, through='UserGames')
 
     GENRES = (
         ('ACT', 'Action'),
@@ -43,3 +43,7 @@ class Game(models.Model):
 
     def get_absolute_url(self):
         return reverse('game-detail', args=[str(self.id)])
+
+class UserGames(models.Model):
+    user = models.ForeignKey(User)
+    game = models.ForeignKey(Game)

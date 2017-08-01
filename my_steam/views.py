@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from .models import Game
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Game, Profile, UserGames
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.views import generic
@@ -28,15 +28,11 @@ class UserGamesList(LoginRequiredMixin, generic.ListView):
     context_object_name = 'game_list'
 
     def get_queryset(self):
-        return Game.objects.filter(owner=self.request.user)
+        return Game.objects.filter(owners=self.request.user)
 
 class GameCreateView(LoginRequiredMixin,CreateView):
     model = Game
     form_class = AddGameForm
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super(GameCreateView, self).form_valid(form)
 
 class GameDetailView(LoginRequiredMixin,generic.DetailView):
     model = Game
@@ -52,6 +48,12 @@ class GameDeleteView(LoginRequiredMixin, DeleteView):
 def index(request):
     num_games = Game.objects.all().count()
     return render(request, 'index.html', context={'num_games':num_games})
+
+def add_game_to_collection(request, pk):
+    if request.method == 'GET':
+        requested_game = get_object_or_404(Game, pk=pk)
+        UserGames.objects.create(user=request.user, game=requested_game)
+        return redirect(index)
 
 def register(request):
     if request.method == 'POST':

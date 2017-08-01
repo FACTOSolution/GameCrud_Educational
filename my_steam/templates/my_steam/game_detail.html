@@ -6,8 +6,17 @@
   <p><strong>Publisher:</strong> {{ game.publisher }}</p>
   <p><strong>Genre:</strong> {{ game.genre }}</p>
   <p><strong>Plataform:</strong> {{ game.platform }}</p>
-  <p><strong>Owner:</strong> {{ game.owner }} </p>
+  <p><strong>Owner:</strong></p>
+    <ul>
+      {% for own in game.owners.all %}
+        <li>{{ own }}</li>
+      {% endfor %}
+    </ul>
   <p><strong>Cover Img:</strong><img src= "media/{{game.cover_img}}"></p>
+
+  {% if user.is_authenticated %}
+      <a href="{% url 'add-game-collection' pk=game.id %}">Add Game Collection</a>
+  {% endif %}
 
   <a href="{% url 'update-game' pk=game.id %}">Update</a>
   <a href="{% url 'delete-game' pk=game.id %}">Delete</a>
