@@ -16,6 +16,8 @@ from django.core.exceptions import ValidationError
 from rolepermissions.roles import assign_role
 from rolepermissions.mixins import HasRoleMixin
 
+import services
+
 class GameListView(LoginRequiredMixin, generic.ListView):
     model = Game
     context_object_name = 'game_list'
@@ -55,6 +57,7 @@ def index(request):
     num_games = Game.objects.all().count()
     return render(request, 'index.html', context={'num_games':num_games})
 
+@login_required
 def add_game_to_collection(request, pk):
     if request.method == 'GET':
         requested_game = get_object_or_404(Game, pk=pk)
@@ -87,3 +90,8 @@ def register(request):
         form = UserRegistrationForm()
         profile_form = ProfileForm()
     return render(request, 'user_form.html', {'form' : form, 'profile_form' :  profile_form})
+
+@login_required
+def get_steam_games(request):
+    if request.method == 'GET':
+        app_list = services.get_player_apps(request.user.profile.steam_id)
