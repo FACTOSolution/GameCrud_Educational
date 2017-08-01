@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'my_steam',
+    'rolepermissions',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ROLEPERMISSIONS_MODULE = 'QOSN.roles'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

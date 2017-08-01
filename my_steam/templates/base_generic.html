@@ -9,6 +9,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   {% load static %}
+  {% load permission_tags %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
@@ -24,10 +25,13 @@
            <li><a href="{% url 'games' %}">All Games</a></li>
            <li><a href="{% url 'my-games' %}">My Games</a></li>
            <li><a href="{% url 'logout' %}">Logout</a></li>
-           <li><a href="{% url 'add-game' %}">Add Game</a></li>
+           {% if user|has_role:'admin' %}
+            <li><a href="{% url 'add-game' %}">Add Game</a></li>
+           {% endif %}
         {% else %}
             <li><a href="{% url 'login' %}">Login</a></li>
         {% endif %}
+            <li><a href="{% url 'signup' %}">Signup</a></li>
      </ul>
     {% endblock %}
      </div>

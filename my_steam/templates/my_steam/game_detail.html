@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+{% load permission_tags %}
   <h1>Title: {{ game.title }}</h1>
 
   <p><strong>Publisher:</strong> {{ game.publisher }}</p>
@@ -18,7 +19,9 @@
       <a href="{% url 'add-game-collection' pk=game.id %}">Add Game Collection</a>
   {% endif %}
 
-  <a href="{% url 'update-game' pk=game.id %}">Update</a>
-  <a href="{% url 'delete-game' pk=game.id %}">Delete</a>
+  {% if user|has_role:'admin' %}
+    <a href="{% url 'update-game' pk=game.id %}">Update</a>
+    <a href="{% url 'delete-game' pk=game.id %}">Delete</a>
+  {% endif %}
 
 {% endblock %}

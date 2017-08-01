@@ -13,6 +13,9 @@ from .forms import AddGameForm, UserRegistrationForm, ProfileForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 
+from rolepermissions.roles import assign_role
+from rolepermissions.mixins import HasRoleMixin
+
 class GameListView(LoginRequiredMixin, generic.ListView):
     model = Game
     context_object_name = 'game_list'
@@ -30,18 +33,21 @@ class UserGamesList(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Game.objects.filter(owners=self.request.user)
 
-class GameCreateView(LoginRequiredMixin,CreateView):
+class GameCreateView(HasRoleMixin,LoginRequiredMixin,CreateView):
+    allowed_roles = 'admin'
     model = Game
     form_class = AddGameForm
 
 class GameDetailView(LoginRequiredMixin,generic.DetailView):
     model = Game
 
-class GameUpdateView(LoginRequiredMixin,UpdateView):
+class GameUpdateView(HasRoleMixin,LoginRequiredMixin,UpdateView):
+    allowed_roles = 'admin'
     model = Game
     fields = ['title','publisher','platform','cover_img','genre']
 
-class GameDeleteView(LoginRequiredMixin, DeleteView):
+class GameDeleteView(HasRoleMixin,LoginRequiredMixin, DeleteView):
+    allowed_roles = 'admin'
     model = Game
     success_url = reverse_lazy('games')
 
@@ -55,6 +61,7 @@ def add_game_to_collection(request, pk):
         UserGames.objects.create(user=request.user, game=requested_game)
         return redirect(index)
 
+# @has_role_decorator('admin')
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -69,6 +76,7 @@ def register(request):
                 profile_form = ProfileForm(request.POST, instance = user.profile)
                 if profile_form.is_valid():
                     profile_form.save()
+                assign_role(user, 'normal')
                 user = authenticate(username=username, password=password)
                 login(request, user)
                 return HttpResponseRedirect('/')
