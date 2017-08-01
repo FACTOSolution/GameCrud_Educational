@@ -12,3 +12,6 @@ def get_player_apps(steam_id):
 
 def get_app_data(appid):
     url =  "http://store.steampowered.com/api/appdetails?appids=" + str(appid)
+    response = requests.get(url)
+    app_data = json.loads(response.text)
+    return app_data[str(appid)]

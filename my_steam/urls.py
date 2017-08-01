@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^games/(?P<pk>\d+)/delete/$', views.GameDeleteView.as_view(), name='delete-game'),
     url(r'^games/(?P<pk>\d+)/add_collection/$', views.add_game_to_collection, name='add-game-collection'),
     url(r'^games/add/$', views.GameCreateView.as_view(), name='add-game'),
+    url(r'^games/add_steam/$', views.get_steam_games, name='add-steam'),
 ]

@@ -11,6 +11,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import AddGameForm, UserRegistrationForm, ProfileForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 
 from rolepermissions.roles import assign_role
@@ -95,3 +96,11 @@ def register(request):
 def get_steam_games(request):
     if request.method == 'GET':
         app_list = services.get_player_apps(request.user.profile.steam_id)
+        for app in app_list:
+            app_data = services.get_app_data(app)
+            if app_data['success'] == True:
+                d = app_data['data']
+                game = Game.objects.create(title=d['name'], publisher=d['publishers'],
+                    genre=d['genres'][0]['description'], cover_img=d['header_image'])
+                UserGames.objects.create(user=request.user, game=game)
+        return redirect(index)

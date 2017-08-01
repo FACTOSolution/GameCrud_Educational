@@ -25,6 +25,7 @@
            <li><a href="{% url 'games' %}">All Games</a></li>
            <li><a href="{% url 'my-games' %}">My Games</a></li>
            <li><a href="{% url 'logout' %}">Logout</a></li>
+           <li><a href="{% url 'add-steam' %}">Add Steam Games</a></li>
            {% if user|has_role:'admin' %}
             <li><a href="{% url 'add-game' %}">Add Game</a></li>
            {% endif %}
